@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer Profile - V-Connect</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --text-dark: #333;
+            --background-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-light);
+        }
+
+        .profile-container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--primary-color);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .edit-icon {
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="home.html">
+                <img src="../assets/v1.png" alt="V-Connect Logo" height="40">
+                V-Connect
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html"><i class="fas fa-handshake"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="opportunities.html"><i class="fas fa-search"></i> Find Opportunities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="myapplications.html"><i class="fas fa-file-alt"></i> My Applications</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="profile.html"><i class="fas fa-user"></i> Profile</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5 mt-5">
+        <div class="profile-container">
+            <label for="profileImageUpload">
+                <img id="profileImage" class="profile-image" src="default-avatar.png" alt="Profile">
+            </label>
+            <input type="file" id="profileImageUpload" class="file-input" accept="image/*">
+            
+            <h3 id="volunteerName">Loading...</h3>
+            <p id="volunteerEmail" class="text-muted">Loading...</p>
+
+            <textarea id="bio" class="form-control mt-3" rows="3" placeholder="Write something about yourself..."></textarea>
+            
+            <button class="btn btn-success mt-3" id="updateProfile">Update Profile</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBAZ3Zap2Q_KBCtb6OZzdmLfARO6T0lMLg",
+            authDomain: "v-connect-7d896.firebaseapp.com",
+            projectId: "v-connect-7d896",
+            storageBucket: "v-connect-7d896.appspot.com",
+            messagingSenderId: "489654796371",
+            appId: "1:489654796371:web:d0bf7b41970aec11d546a6",
+            measurementId: "G-CBRKEL7DXS"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth();
+        const storage = getStorage(app);
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                loadProfile();
+            } else {
+                alert("Please log in to view your profile.");
+                window.location.href = "login.html";
+            }
+        });
+
+        async function loadProfile() {
+            if (!currentUser) return;
+
+            const userRef = doc(db, "volunteers", currentUser.uid);
+            const userSnap = await getDoc(userRef);
+
+            if (userSnap.exists()) {
+                const data = userSnap.data();
+                document.getElementById("volunteerName").innerText = data.name || "No Name";
+                document.getElementById("volunteerEmail").innerText = currentUser.email;
+                document.getElementById("bio").value = data.bio || "";
+
+                if (data.profileImage) {
+                    document.getElementById("profileImage").src = data.profileImage;
+                }
+            } else {
+                await setDoc(userRef, {
+                    name: currentUser.displayName || "No Name",
+                    email: currentUser.email,
+                    bio: "",
+                    profileImage: ""
+                });
+                loadProfile();
+            }
+        }
+
+        document.getElementById("updateProfile").addEventListener("click", async () => {
+            if (!currentUser) return;
+            const bio = document.getElementById("bio").value;
+
+            const userRef = doc(db, "volunteers", currentUser.uid);
+            await updateDoc(userRef, { bio });
+
+            alert("Profile updated!");
+        });
+
+        document.getElementById("profileImageUpload").addEventListener("change", async (event) => {
+            if (!currentUser) return;
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const storageRef = ref(storage, `profileImages/${currentUser.uid}`);
+            await uploadBytes(storageRef, file);
+
+            const imageUrl = await getDownloadURL(storageRef);
+            document.getElementById("profileImage").src = imageUrl;
+
+            const userRef = doc(db, "volunteers", currentUser.uid);
+            await updateDoc(userRef, { profileImage: imageUrl });
+
+            alert("Profile picture updated!");
+        });
+
+    </script>
+
+</body>
+</html>

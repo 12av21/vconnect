@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="V-Connect is a platform that connects volunteers with meaningful opportunities to help the community. Join us to make a difference.">
+  
+  <title>V-Connect | Home</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-color: #FFD700;
+      --secondary-color: #FFE55C;
+      --accent-color: #FFF176;
+      --dark-yellow: #FFC107;
+      --light-yellow: #FFF9C4;
+      --lighter-yellow: #FFFDE7;
+      --text-dark: #2c3e50;
+      --text-light: #ffffff;
+      --error-color: #dc3545;
+      --success-color: #28a745;
+      --dark: #333333;
+      --light: #f8f9fa;
+    }
+    
+    body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light);
+        }
+
+        .navbar {
+            background: var(--text-dark);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            color: var(--text-light) !important;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+    .btn-primary {
+      background: var(--primary-color);
+      border: none;
+      padding: 0.6rem 1.5rem;
+      font-weight: 500;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      color: var(--text-dark);
+    }
+
+    .btn-primary:hover {
+      background: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+    }
+
+    #hero {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      padding: 150px 0;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--text-dark);
+      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.1);
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      color: var(--text-dark);
+      opacity: 0.9;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .mission-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.3s ease;
+      height: 100%;
+    }
+
+    .mission-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .mission-icon {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    .steps-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      margin-bottom: 2rem;
+      height: 100%;
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      background: var(--primary-color);
+      color: var(--text-dark);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      font-weight: 600;
+    }
+
+    .project-card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+      margin-bottom: 2rem;
+      height: 100%;
+    }
+
+    .project-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .project-image {
+      height: 200px;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .project-content {
+      padding: 1.5rem;
+    }
+
+    .project-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .faq-item {
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .testimonial-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+    .footer {
+        background: var(--text-dark);
+        color: var(--text-light);
+        padding: 3rem 0;
+    }
+    
+    .social-links a {
+        color: var(--text-light);
+        text-decoration: none;
+        margin: 0 1rem;
+        transition: color 0.3s ease;
+    }
+    
+    .social-links a:hover {
+        color: var(--primary-color);
+    }
+    
+    .footer a {
+        color: var(--text-light);
+        text-decoration: none;
+    }
+    
+    .footer a:hover {
+        color: var(--primary-color);
+    }
+   
+    .join-form {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+   
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="home.html">
+            <img src="../assets/v1.png" alt="V-Connect Logo" height="40">
+            V-Connect
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="opportunity.html">
+                        <i class="fas fa-search"></i> Opportunities
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">
+                        <i class="fas fa-info-circle"></i> About
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="blog.html">
+                        <i class="fas fa-blog"></i> Blog
+                    </a>
+                </li>
+               
+                <li class="nav-item">
+                    <a class="nav-link btn btn-primary ms-2" href="signup.html">
+                        <i class="fas fa-user"></i> Login
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+  <section id="hero">
+    <div class="container">
+      <h1 class="hero-title">Make a Difference with V-Connect</h1>
+      <p class="hero-subtitle">Join our community of passionate volunteers and organizers dedicated to making the world a better place.</p>
+      <a href="#join-us" class="btn btn-primary btn-lg">
+        <i class="fas fa-hands-helping"></i> Get Involved
+      </a>
+    </div>
+  </section>
+
+  <section id="mission" class="py-5">
+    <div class="container">
+      <h2 class="section-title">Our Mission</h2>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="mission-card">
+            <i class="fas fa-heart mission-icon"></i>
+            <h3>Empower Communities</h3>
+            <p>We believe in the power of collective action to create positive change in communities.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="mission-card">
+            <i class="fas fa-users mission-icon"></i>
+            <h3>Connect People</h3>
+            <p>We connect passionate volunteers with meaningful opportunities to make a difference.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="mission-card">
+            <i class="fas fa-globe mission-icon"></i>
+            <h3>Create Impact</h3>
+            <p>Together, we work towards creating lasting positive impact in society.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how-it-works" class="py-5 bg-light">
+    <div class="container">
+      <h2 class="section-title">How It Works</h2>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="steps-card">
+            <div class="step-number">1</div>
+            <h3>Sign Up</h3>
+            <p>Create your account and tell us about your interests and skills.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="steps-card">
+            <div class="step-number">2</div>
+            <h3>Find Opportunities</h3>
+            <p>Browse through various volunteering opportunities that match your interests.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="steps-card">
+            <div class="step-number">3</div>
+            <h3>Get Involved</h3>
+            <p>Join events and projects to make a positive impact in your community.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="featured-projects" class="py-5">
+    <div class="container">
+      <h2 class="section-title">Featured Projects</h2>
+      <div class="row g-4">
+        <!-- Project cards here -->
+        <div class="col-md-4">
+          <div class="project-card">
+            <img src="../assets/garden.jpg" alt="Project 1" class="project-image">
+            <div class="project-content">
+              <h3 class="project-title">Plant Trees in Local Park</h3>
+              <p>Help plant trees in the local park to create a greener environment for everyone.</p>
+            </div>
+          </div>
+        </div>
+          <div class="col-md-4">
+            <div class="project-card">
+              <img src="../assets/park.jpg" alt="Project 2" class="project-image">
+              <div class="project-content">
+                <h3 class="project-title">Recycle Bin Improvements</h3>
+                <p>Help improve the recycling bins in local schools to reduce waste and increase efficiency.</p>
+              </div>
+          </div>
+        </div>
+          <div class="col-md-4">
+            <div class="project-card">
+              <img src="../assets/cleanup.jpg" alt="Project 3" class="project-image">
+              <div class="project-content">
+                <h3 class="project-title">Clean Up Public Spaces</h3>
+                <p>Help clean up public spaces in local neighborhoods to reduce noise and improve air quality.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="project-card">
+              <img src="../assets/4.jpg" alt="Project 4" class="project-image">
+              <div class="project-content">
+                <h3 class="project-title">Sustainable Food Production</h3>
+                <p>Help improve sustainable food production in local farms to reduce waste and promote healthy eating.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="project-card">
+              <img src="../assets/1.jpg" alt="Project 5" class="project-image">
+              <div class="project-content">
+                <h3 class="project-title">Community Garden</h3>
+                <p>Help maintain a community garden to promote healthy eating and sustainable living.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+    </div>
+  </section>
+
+  <section id="join-us" class="py-5 bg-light">
+    <div class="container">
+      <h2 class="section-title">Join Us Today</h2>
+      <div class="join-form">
+        <form id="signup-form">
+          <div class="mb-3">
+            <label for="name" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="name" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email" class="form-control" id="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="interests" class="form-label">Areas of Interest</label>
+            <select class="form-select" id="interests" multiple>
+              <option value="environment">Environment</option>
+              <option value="education">Education</option>
+              <option value="healthcare">Healthcare</option>
+              <option value="community">Community Service</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+        </form>
+      </div>
+    </div>
+  </section>
+  <footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>About V-Connect</h5>
+                <p>Connecting volunteers with meaningful opportunities to create positive change in communities.</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="opportunity.html">Opportunities</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Connect With Us</h5>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <hr class="mt-4">
+        <div class="text-center">
+            <p>&copy; 2024 V-Connect. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module">
+    // Firebase configuration and initialization
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      const firebaseConfig = {
+      apiKey: "AIzaSyBAZ3Zap2Q_KBCtb6OZzdmLfARO6T0lMLg",
+      authDomain: "v-connect-7d896.firebaseapp.com",
+      projectId: "v-connect-7d896",
+      storageBucket: "v-connect-7d896.appspot.com",
+      messagingSenderId: "489654796371",
+      appId: "1:489654796371:web:d0bf7b41970aec11d546a6",
+      measurementId: "G-CBRKEL7DXS"
+    };
+  
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+  </script>
+</body>
+</html>

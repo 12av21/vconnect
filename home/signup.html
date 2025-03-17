@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - V-Connect</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="../styles.css" rel="stylesheet">
+  <style>
+   :root {
+            --primary-color: #FFD700;
+            --secondary-color: #FFE55C;
+            --text-dark: #2c3e50;
+            --text-light: #ffffff;
+            --dark: #333333;
+            --light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light);
+        }
+
+        .navbar {
+            background: var(--text-dark);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            color: var(--text-light) !important;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+    .auth-container {
+      background: white;
+      border-radius: 25px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      width: 100%;
+      max-width: 800px;
+      margin: 8rem auto;
+      display: flex;
+      position: relative;
+    }
+
+    .auth-left {
+      flex: 1;
+      background: linear-gradient(135deg, var(--primary-color), var(--dark-green));
+      padding: 3rem;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-left::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=800&q=80') center/cover;
+      opacity: 0.5;
+    }
+
+    .auth-left h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .auth-left p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .auth-features {
+      list-style: none;
+      padding: 0;
+      position: relative;
+    }
+
+    .auth-features li {
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .auth-features i {
+      margin-right: 1rem;
+      font-size: 1.2rem;
+    }
+
+    .auth-right {
+      flex: 1;
+      padding: 3rem;
+      background: rgb(213, 212, 169);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .form-control {
+      border: 2px solid #e1e1e1;
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+      background: white;
+    }
+
+    .form-label {
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .btn-auth {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      font-weight: 500;
+      border-radius: 10px;
+      width: 100%;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .btn-auth:hover {
+      background: var(--secondary-color);
+      transform: translateY(-2px);
+    }
+
+    .social-login {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .social-btn {
+      flex: 1;
+      padding: 0.8rem;
+      border: 2px solid #e1e1e1;
+      border-radius: 10px;
+      background: white;
+      color: var(--text-dark);
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .social-btn:hover {
+      border-color: var(--primary-color);
+      background: var(--lighter-green);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 2rem 0;
+      color: var(--text-light);
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 2px solid #e1e1e1;
+    }
+
+    .divider span {
+      padding: 0 1rem;
+      font-size: 0.9rem;
+    }
+
+    .password-strength {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .password-requirements {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-top: 0.5rem;
+    }
+
+    .requirement-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .requirement-item i {
+      font-size: 0.8rem;
+    }
+
+    .valid-requirement {
+      color: var(--success-color);
+    }
+
+    .invalid-requirement {
+      color: var(--text-light);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: none;
+      color: var(--text-light);
+      cursor: pointer;
+    }
+
+    .alert {
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: none;
+    }
+
+    .alert-success {
+      background-color: var(--light-green);
+      color: var(--dark-green);
+    }
+
+    .alert-danger {
+      background-color: #ffebee;
+      color: var(--error-color);
+    }
+
+    @media (max-width: 768px) {
+      .auth-container {
+        flex-direction: column;
+        max-width: 500px;
+      }
+
+      .auth-left {
+        padding: 2rem;
+      }
+
+      .auth-right {
+        padding: 2rem;
+      }
+    }
+    <style>
+        :root {
+            --primary-color: #FFD700;
+            --secondary-color: #FFE55C;
+            --text-dark: #2c3e50;
+            --text-light: #ffffff;
+            --dark: #333333;
+            --light: #f8f9fa;
+        }
+    .footer {
+        background: var(--text-dark);
+        color: var(--text-light);
+        padding: 3rem 0;
+    }
+    
+    .social-links a {
+        color: var(--text-light);
+        text-decoration: none;
+        margin: 0 1rem;
+        transition: color 0.3s ease;
+    }
+    
+    .social-links a:hover {
+        color: var(--primary-color);
+    }
+    
+    .footer a {
+        color: var(--text-light);
+        text-decoration: none;
+    }
+    
+    .footer a:hover {
+        color: var(--primary-color);
+    }
+    </style>
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="home.html">
+            <img src="../assets/v1.png" alt="V-Connect Logo" height="40">
+            V-Connect
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="opportunity.html">
+                        <i class="fas fa-search"></i> Opportunities
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">
+                        <i class="fas fa-info-circle"></i> About
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="blog.html">
+                        <i class="fas fa-blog"></i> Blog
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link btn btn-primary ms-2" href="signup.html">
+                        <i class="fas fa-user"></i> Login
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+  
+  <div class="container">
+    <div class="auth-container">
+      <div class="auth-left">
+        <h1>Welcome to V-Connect</h1>
+        <p>Join our community of volunteers and make a real difference in the world</p>
+        <ul class="auth-features">
+          <li><i class="fas fa-hands-helping"></i> Connect with meaningful volunteer opportunities</li>
+          <li><i class="fas fa-users"></i> Join a community of passionate volunteers</li>
+          <li><i class="fas fa-certificate"></i> Earn certificates and recognition</li>
+          <li><i class="fas fa-chart-line"></i> Track your volunteer journey</li>
+        </ul>
+      </div>
+
+      <div class="auth-right">
+        <div id="auth-forms">
+          <!-- Signup Form -->
+          <form id="signup-form" class="auth-form" style="display: none;">
+            <h2 class="mb-4">Create Account</h2>
+            
+            <div class="social-login">
+              <button type="button" class="social-btn" id="google-signup">
+                <img src="https://www.google.com/favicon.ico" alt="Google" width="20" height="20">
+                Google
+              </button>
+              <button type="button" class="social-btn" id="facebook-signup">
+                <i class="fab fa-facebook-f"></i>
+                Facebook
+              </button>
+            </div>
+
+            <div class="divider">
+              <span>or register with email</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="name">Full Name</label>
+              <input type="text" class="form-control" id="name" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="email">Email Address</label>
+              <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="password">Password</label>
+              <input type="password" class="form-control" id="password" placeholder="Create a password" required>
+              <button type="button" class="toggle-password" aria-label="Toggle password visibility" title="Toggle password visibility">
+                <i class="fas fa-eye" aria-hidden="true"></i>
+              </button>
+              <div class="password-requirements">
+                <div class="requirement-item" data-requirement="length">
+                  <i class="fas fa-circle"></i> At least 8 characters
+                </div>
+                <div class="requirement-item" data-requirement="uppercase">
+                  <i class="fas fa-circle"></i> One uppercase letter
+                </div>
+                <div class="requirement-item" data-requirement="lowercase">
+                  <i class="fas fa-circle"></i> One lowercase letter
+                </div>
+                <div class="requirement-item" data-requirement="number">
+                  <i class="fas fa-circle"></i> One number
+                </div>
+                <div class="requirement-item" data-requirement="special">
+                  <i class="fas fa-circle"></i> One special character
+                </div>
+              </div>
+        </div>
+
+            <div class="form-group">
+              <label class="form-label" for="userType">I want to</label>
+              <select class="form-control" id="userType" required>
+                <option value="" disabled selected>Select your role</option>
+                <option value="volunteer">Volunteer for Events</option>
+                <option value="organizer">Organize Events</option>
+        </select>
+            </div>
+
+            <button type="submit" class="btn btn-auth">
+              <i class="fas fa-user-plus me-2"></i> Create Account
+            </button>
+
+            <p class="text-center mt-4">
+              Already have an account? 
+              <a href="#" id="toggle-form" class="text-decoration-none text-primary">Sign in</a>
+            </p>
+      </form>
+
+          <!-- Login Form -->
+          <form id="login-form" class="auth-form">
+            <h2 class="mb-4">Welcome Back</h2>
+
+            <div class="social-login">
+              <button type="button" class="social-btn" id="google-login">
+                <img src="https://www.google.com/favicon.ico" alt="Google" width="20" height="20">
+                Google
+              </button>
+              <button type="button" class="social-btn" id="facebook-login">
+                <i class="fab fa-facebook-f"></i>
+                Facebook
+              </button>
+            </div>
+
+            <div class="divider">
+              <span>or sign in with email</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="login-email">Email Address</label>
+              <input type="email" class="form-control" id="login-email" placeholder="Enter your email" required>
+    </div>
+
+            <div class="form-group">
+              <label class="form-label" for="login-password">Password</label>
+              <input type="password" class="form-control" id="login-password" placeholder="Enter your password" required>
+              <button type="button" class="toggle-password" aria-label="Toggle password visibility" title="Toggle password visibility">
+                <i class="fas fa-eye" aria-hidden="true"></i>
+              </button>
+        </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="remember-me">
+                <label class="form-check-label" for="remember-me">Remember me</label>
+    </div>
+              <a href="#" id="forgot-password" class="text-decoration-none">Forgot Password?</a>
+        </div>
+
+            <button type="submit" class="btn btn-auth">
+              <i class="fas fa-sign-in-alt me-2"></i> Sign In
+            </button>
+
+            <p class="text-center mt-4">
+              Don't have an account? 
+              <a href="#" id="toggle-to-signup" class="text-decoration-none text-primary">Sign up</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>About V-Connect</h5>
+                <p>Connecting volunteers with meaningful opportunities to create positive change in communities.</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="opportunity.html">Opportunities</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Connect With Us</h5>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <hr class="mt-4">
+        <div class="text-center">
+            <p>&copy; 2024 V-Connect. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+    import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+  
+    const firebaseConfig = {
+      apiKey: "AIzaSyBAZ3Zap2Q_KBCtb6OZzdmLfARO6T0lMLg",
+      authDomain: "v-connect-7d896.firebaseapp.com",
+      projectId: "v-connect-7d896",
+      storageBucket: "v-connect-7d896.appspot.com",
+      messagingSenderId: "489654796371",
+      appId: "1:489654796371:web:d0bf7b41970aec11d546a6",
+      measurementId: "G-CBRKEL7DXS"
+    };
+  
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Form elements
+    const signupForm = document.getElementById('signup-form');
+    const loginForm = document.getElementById('login-form');
+    const toggleForm = document.getElementById('toggle-form');
+    const toggleToSignup = document.getElementById('toggle-to-signup');
+
+    // Check URL parameters for form selection
+    const urlParams = new URLSearchParams(window.location.search);
+    const showSignup = urlParams.get('signup') === 'true';
+    
+    // Show appropriate form based on URL parameter
+    if (showSignup) {
+      signupForm.style.display = 'block';
+      loginForm.style.display = 'none';
+    }
+
+    // Toggle between forms
+    function toggleForms() {
+      const isLogin = loginForm.style.display !== 'none';
+      loginForm.style.display = isLogin ? 'none' : 'block';
+      signupForm.style.display = isLogin ? 'block' : 'none';
+    }
+
+    toggleForm.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleForms();
+    });
+
+    toggleToSignup.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleForms();
+    });
+
+    // Form validation
+    function validateEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    function validatePassword(password) {
+      return {
+        length: password.length >= 8,
+        uppercase: /[A-Z]/.test(password),
+        lowercase: /[a-z]/.test(password),
+        number: /[0-9]/.test(password),
+        special: /[^A-Za-z0-9]/.test(password)
+      };
+    }
+
+    function showMessage(form, message, type = 'danger') {
+      const existingAlert = form.querySelector('.alert');
+      if (existingAlert) {
+        existingAlert.remove();
+      }
+
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `alert alert-${type}`;
+      messageDiv.textContent = message;
+      form.insertBefore(messageDiv, form.firstChild);
+
+      if (type === 'success') {
+        setTimeout(() => messageDiv.remove(), 5000);
+      }
+    }
+  
+    // Handle Sign-Up Form Submission
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+  
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const userType = document.getElementById('userType').value;
+  
+      // Validate fields
+      if (!name || !email || !password || !userType) {
+        showMessage(signupForm, "Please fill in all fields");
+        return;
+      }
+
+      if (name.length < 2) {
+        showMessage(signupForm, "Name must be at least 2 characters long");
+        return;
+      }
+  
+      if (!validateEmail(email)) {
+        showMessage(signupForm, "Please enter a valid email address");
+        return;
+      }
+  
+      const passwordChecks = validatePassword(password);
+      if (!Object.values(passwordChecks).every(Boolean)) {
+        showMessage(signupForm, "Please ensure your password meets all requirements");
+        return;
+      }
+  
+      try {
+        const submitBtn = signupForm.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+  
+        await setDoc(doc(db, 'users', user.uid), {
+          uid: user.uid,
+          name: name,
+          email: email,
+          userType: userType,
+          profileCompleted: false,
+          createdAt: new Date().toISOString(),
+          lastLogin: new Date().toISOString(),
+          status: 'active'
+        });
+
+        // Store user info
+        localStorage.setItem('userType', userType);
+        localStorage.setItem('userName', name);
+        localStorage.setItem('userEmail', email);
+
+        showMessage(signupForm, "Account created successfully! Please login to continue.", "success");
+
+        // Create welcome notification
+        await addDoc(collection(db, 'notifications'), {
+          userId: user.uid,
+          type: 'welcome',
+          title: 'Welcome to V-Connect!',
+          message: `Welcome ${name}! Thank you for joining our community.`,
+          read: false,
+          createdAt: new Date().toISOString()
+        });
+
+        // Log activity
+        await addDoc(collection(db, 'activities'), {
+          userId: user.uid,
+          type: 'signup',
+          details: `New ${userType} account created`,
+          timestamp: new Date().toISOString()
+        });
+
+        // After successful signup, switch to login form after a delay
+        setTimeout(() => {
+          // Clear the signup form
+          signupForm.reset();
+          // Switch to login form
+          loginForm.style.display = 'block';
+          signupForm.style.display = 'none';
+          // Pre-fill the login email
+          document.getElementById('login-email').value = email;
+        }, 1500);
+
+      } catch (error) {
+        let errorMessage = 'An error occurred during sign up';
+        if (error.code === 'auth/email-already-in-use') {
+          errorMessage = 'This email is already registered. Please login instead.';
+        }
+        showMessage(signupForm, errorMessage);
+        
+        const submitBtn = signupForm.querySelector('button[type="submit"]');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-user-plus me-2"></i> Create Account';
+      }
+    });
+
+    // Add password requirements validation
+    const passwordInput = document.getElementById('password');
+    const requirements = {
+      length: password => password.length >= 8,
+      uppercase: password => /[A-Z]/.test(password),
+      lowercase: password => /[a-z]/.test(password),
+      number: password => /[0-9]/.test(password),
+      special: password => /[^A-Za-z0-9]/.test(password)
+    };
+
+    passwordInput.addEventListener('input', () => {
+      const password = passwordInput.value;
+      Object.keys(requirements).forEach(requirement => {
+        const element = document.querySelector(`[data-requirement="${requirement}"]`);
+        if (requirements[requirement](password)) {
+          element.classList.add('valid-requirement');
+          element.querySelector('i').className = 'fas fa-check-circle';
+        } else {
+          element.classList.remove('valid-requirement');
+          element.querySelector('i').className = 'fas fa-circle';
+        }
+      });
+    });
+
+    // Password visibility toggle
+    document.querySelectorAll('.toggle-password').forEach(button => {
+      button.addEventListener('click', () => {
+        const input = button.previousElementSibling;
+        const icon = button.querySelector('i');
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.className = 'fas fa-eye-slash';
+        } else {
+          input.type = 'password';
+          icon.className = 'fas fa-eye';
+        }
+      });
+    });
+  
+    // Handle Login Form Submission
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+  
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value.trim();
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'alert';
+      loginForm.appendChild(messageDiv);
+  
+      if (!email || !password) {
+        messageDiv.className = 'alert alert-danger';
+        messageDiv.textContent = "Please fill all the fields.";
+        return;
+      }
+  
+      try {
+        // Show loading state
+        const submitBtn = loginForm.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+        submitBtn.disabled = true;
+
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        
+        // Get user data from Firestore
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        const userData = userDoc.data();
+        
+        if (!userData) {
+          messageDiv.className = 'alert alert-danger';
+          messageDiv.textContent = "User profile not found.";
+            return;
+          }
+  
+        // Store user type in localStorage for future use
+        localStorage.setItem('userType', userData.userType);
+        localStorage.setItem('userName', userData.name);
+
+        // Determine redirect path based on user type and profile completion
+        let redirectPath;
+        switch (userData.userType) {
+          case 'volunteer':
+            redirectPath = '../volunteer/dashboard.html';
+            break;
+          case 'organizer':
+            redirectPath = '../organizer/organizerDashboard.html';
+            break;
+         
+        }
+
+        // Show success message before redirect
+        messageDiv.className = 'alert alert-success';
+        messageDiv.textContent = "Login successful! Redirecting...";
+        
+        // Redirect after a short delay
+        setTimeout(() => {
+          window.location.href = redirectPath;
+        }, 1000);
+
+      } catch (error) {
+        // Handle specific error cases
+        let errorMessage;
+        switch (error.code) {
+          case 'auth/invalid-email':
+            errorMessage = 'Invalid email address format.';
+            break;
+          case 'auth/user-disabled':
+            errorMessage = 'This account has been disabled.';
+            break;
+          case 'auth/user-not-found':
+            errorMessage = 'No account found with this email.';
+            break;
+          case 'auth/wrong-password':
+            errorMessage = 'Incorrect password.';
+            break;
+          default:
+            errorMessage = 'Error during login: ' + error.message;
+        }
+        
+        messageDiv.className = 'alert alert-danger';
+        messageDiv.textContent = errorMessage;
+
+        // Reset button state
+        const submitBtn = loginForm.querySelector('button[type="submit"]');
+        submitBtn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i> Sign In';
+        submitBtn.disabled = false;
+      }
+    });
+
+    // Handle Forgot Password
+    document.getElementById('forgot-password').addEventListener('click', (e) => {
+      e.preventDefault();
+      // Implement forgot password functionality
+      alert("Forgot password functionality will be implemented soon.");
+    });
+  </script>
+</body>
+</html>

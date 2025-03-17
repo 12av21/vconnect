@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications - V-Connect</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #45a049;
+            --text-dark: #333333;
+            --background-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-light);
+        }
+
+        .application-card {
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            transition: transform 0.3s;
+        }
+
+        .application-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .status-badge {
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .pending {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .approved {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .rejected {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .navbar {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="home.html">
+                <img src="../assets/v1.png" alt="V-Connect Logo" height="40">
+                V-Connect
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html"><i class="fas fa-handshake"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="opportunities.html"><i class="fas fa-search"></i> Find Opportunities</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="myapplications.html"><i class="fas fa-file-alt"></i> My Applications</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">
+                            <img src="" alt="Profile" id="navProfileImage" class="rounded-circle" width="30" height="30">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4 mt-5">
+        <h2 class="mb-4">My Applications</h2>
+        <div id="applicationsList">
+            <!-- Applications will be loaded here -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBAZ3Zap2Q_KBCtb6OZzdmLfARO6T0lMLg",
+            authDomain: "v-connect-7d896.firebaseapp.com",
+            projectId: "v-connect-7d896",
+            storageBucket: "v-connect-7d896.appspot.com",
+            messagingSenderId: "489654796371",
+            appId: "1:489654796371:web:d0bf7b41970aec11d546a6",
+            measurementId: "G-CBRKEL7DXS"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth();
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                loadApplications();
+            } else {
+                alert("You need to log in to view your applications.");
+                window.location.href = "login.html";
+            }
+        });
+
+        async function loadApplications() {
+            const applicationsList = document.getElementById('applicationsList');
+            applicationsList.innerHTML = `<div class="text-center text-muted">Loading applications...</div>`;
+
+            if (!currentUser) return;
+
+            const applicationsRef = collection(db, "applications");
+            const q = query(applicationsRef, where("userId", "==", currentUser.uid));
+
+            onSnapshot(q, async (snapshot) => {
+                if (snapshot.empty) {
+                    applicationsList.innerHTML = `<div class="text-center text-muted">You have not applied for any events yet.</div>`;
+                    return;
+                }
+
+                applicationsList.innerHTML = ""; 
+
+                for (const docSnap of snapshot.docs) {
+                    const application = docSnap.data();
+                    const eventId = application.eventId;
+                    const eventDoc = await getDocs(query(collection(db, "events"), where("__name__", "==", eventId)));
+
+                    if (!eventDoc.empty) {
+                        const event = eventDoc.docs[0].data();
+                        applicationsList.innerHTML += `
+                            <div class="application-card">
+                                <h5>${event.title}</h5>
+                                <p class="text-muted"><i class="fas fa-calendar"></i> ${formatDate(event.date)}</p>
+                                <p class="text-muted"><i class="fas fa-map-marker-alt"></i> ${event.location}</p>
+                                <p>${event.description}</p>
+                                <span class="status-badge ${getStatusClass(application.status)}">
+                                    ${application.status || "Pending"}
+                                </span>
+                            </div>
+                        `;
+                    }
+                }
+            });
+        }
+
+        function getStatusClass(status) {
+            if (status === "Approved") return "approved";
+            if (status === "Rejected") return "rejected";
+            return "pending";
+        }
+
+        function formatDate(date) {
+            return new Date(date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+    </script>
+
+</body>
+</html>

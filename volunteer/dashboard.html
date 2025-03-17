@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer Dashboard - V-Connect</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #45a049;
+            --accent-color: #FFD700;
+            --text-dark: #333333;
+            --text-light: #ffffff;
+            --background-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-light);
+            padding-top: 70px; /* Added to prevent navbar overlap */
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .event-card {
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .event-card:hover {
+            transform: translateX(5px);
+        }
+
+        .badge-card {
+    transition: transform 0.3s;
+    padding: 15px;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.badge-card:hover {
+    transform: scale(1.05);
+}
+
+.badge-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.badge-gold {
+    color: #FFD700;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+}
+
+.badge-silver {
+    color: #C0C0C0;
+    text-shadow: 0 0 5px rgba(192, 192, 192, 0.5);
+}
+
+.badge-bronze {
+    color: #CD7F32;
+    text-shadow: 0 0 5px rgba(205, 127, 50, 0.5);
+}
+
+        .skill-progress {
+            margin-bottom: 1rem;
+        }
+
+        .skill-progress .progress {
+            height: 8px;
+            border-radius: 4px;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 2rem;
+            height: 2rem;
+            border: 0.25rem solid rgba(76, 175, 80, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-white">
+        <div class="container">
+            <a class="navbar-brand" href="home.html">
+                <img src="../assets/v1.png" alt="V-Connect Logo" height="40">
+                V-Connect
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="navbar-brand" href="dashboard.html">
+                            <i class="fas fa-handshake"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="opportunities.html">
+                            <i class="fas fa-search"></i> Find Opportunities
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="myevents.html">
+                            <i class="fas fa-calendar"></i> My Events
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="certificates.html">
+                            <i class="fas fa-certificate"></i> Certificates
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">
+                            <img src="" alt="Profile" id="navProfileImage" class="rounded-circle" width="30" height="30">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <button id="logoutBtn" class="btn btn-outline-danger ms-2">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="errorContainer" class="alert alert-danger d-none">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="errorMessage">An error occurred</span>
+    </div>
+
+    <div class="container py-4">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 id="welcomeMessage">Welcome back!</h2>
+                    <p class="lead mb-0" id="volunteerLevel">Loading your volunteer status...</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="opportunities.html" class="btn btn-light btn-lg">
+                        <i class="fas fa-search"></i> Find Opportunities
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Row -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stats-card text-center">
+                    <i class="fas fa-clock fa-2x mb-2" style="color: var(--primary-color);"></i>
+                    <div class="stats-number" id="totalHours">0</div>
+                    <div>Volunteer Hours</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card text-center">
+                    <i class="fas fa-calendar-check fa-2x mb-2" style="color: var(--primary-color);"></i>
+                    <div class="stats-number" id="eventsAttended">0</div>
+                    <div>Events Attended</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card text-center">
+                    <i class="fas fa-star fa-2x mb-2" style="color: var(--primary-color);"></i>
+                    <div class="stats-number" id="totalPoints">0</div>
+                    <div>Total Points</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card text-center">
+                    <i class="fas fa-medal fa-2x mb-2" style="color: var(--primary-color);"></i>
+                    <div class="stats-number" id="badgesEarned">0</div>
+                    <div>Badges Earned</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Left Column -->
+            <div class="col-lg-8">
+                <!-- Upcoming Events -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="card-title mb-0">Upcoming Events</h4>
+                            <a href="myevents.html" class="btn btn-outline-primary btn-sm">View All</a>
+                        </div>
+                        <div id="upcomingEventsList">
+                            <div class="text-center py-4">
+                                <div class="loading-spinner"></div>
+                                <p class="mt-2">Loading events...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills Progress -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h4 class="card-title">Skills Progress</h4>
+                        <div id="skillsList">
+                            <div class="text-center py-4">
+                                <div class="loading-spinner"></div>
+                                <p class="mt-2">Loading skills...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-lg-4">
+                <!-- Recent Badges -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h4 class="card-title">Recent Badges</h4>
+                        <div id="badgesList" class="row">
+                            <div class="text-center py-4">
+                                <div class="loading-spinner"></div>
+                                <p class="mt-2">Loading badges...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+                <!-- Recent Certificates -->
+               
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Firebase Integration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, where, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBAZ3Zap2Q_KBCtb6OZzdmLfARO6T0lMLg",
+            authDomain: "v-connect-7d896.firebaseapp.com",
+            projectId: "v-connect-7d896",
+            storageBucket: "v-connect-7d896.appspot.com",
+            messagingSenderId: "489654796371",
+            appId: "1:489654796371:web:d0bf7b41970aec11d546a6",
+            measurementId: "G-CBRKEL7DXS"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Add this line before using currentUser
+let currentUser;
+
+
+        // Initialize dashboard
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                await loadDashboard();
+            } else {
+                window.location.href = '../home/signup.html';
+            }
+        });
+ 
+        async function loadDashboard() {
+            try {
+                await Promise.all([
+                    loadUserProfile(),
+                    loadStatistics(),
+                    loadUpcomingEvents(),
+                    loadSkillsProgress(),
+                    loadRecentBadges(),
+                ]);
+            } catch (error) {
+                console.error("Error loading dashboard:", error);
+                showAlert("Error loading dashboard data", "danger");
+            }
+        }
+
+        // Load user profile
+        async function loadUserProfile() {
+            try {
+                const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                   // Correct code with proper template literal syntax
+document.getElementById('welcomeMessage').textContent = 
+    `Welcome back, ${userData.name || 'Volunteer'}!`;
+document.getElementById('volunteerLevel').textContent = 
+    `Level ${calculateLevel(userData.points || 0)} Volunteer`;
+
+                    if (userData.imageUrl) {
+                        document.getElementById('navProfileImage').src = userData.imageUrl;
+                    } else {
+                        document.getElementById('navProfileImage').src = 'https://via.placeholder.com/30';
+                    }
+                }
+            } catch (error) {
+                console.error("Error loading user profile:", error);
+                showError("Could not load user profile");
+            }
+        }
+
+        // Load statistics
+        async function loadStatistics() {
+            try {
+                const statsDoc = await getDoc(doc(db, "volunteerStats", currentUser.uid));
+                if (statsDoc.exists()) {
+                    const stats = statsDoc.data();
+                    document.getElementById('totalHours').textContent = stats.totalHours || 0;
+                    document.getElementById('eventsAttended').textContent = stats.eventsAttended || 0;
+                    document.getElementById('totalPoints').textContent = stats.points || 0;
+                    document.getElementById('badgesEarned').textContent = 
+                        Object.keys(stats.badges || {}).length;
+                } else {
+                    // Initialize with zeros if no stats exist
+                    document.getElementById('totalHours').textContent = 0;
+                    document.getElementById('eventsAttended').textContent = 0;
+                    document.getElementById('totalPoints').textContent = 0;
+                    document.getElementById('badgesEarned').textContent = 0;
+                }
+            } catch (error) {
+                console.error("Error loading statistics:", error);
+                showError("Could not load volunteer statistics");
+            }
+        }
+
+        // Load upcoming events
+        async function loadUpcomingEvents() {
+            try {
+                const eventsQuery = query(
+                    collection(db, "eventRegistrations"),
+                    where("volunteerId", "==", currentUser.uid),
+                    where("status", "==", "upcoming"),
+                    orderBy("date"),
+                    limit(3)
+                );
+
+                const snapshot = await getDocs(eventsQuery);
+                const eventsList = document.getElementById('upcomingEventsList');
+                
+                if (snapshot.empty) {
+                    eventsList.innerHTML = `
+                        <div class="text-center py-4">
+                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                            <h5>No upcoming events</h5>
+                            <p class="text-muted">Ready to make a difference?</p>
+                            <a href="opportunities.html" class="btn btn-primary">Find Opportunities</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                eventsList.innerHTML = '';
+                for (const doc of snapshot.docs) {
+                    const registration = doc.data();
+                    const eventDoc = await getDoc(registration.eventRef);
+                    
+                    if (eventDoc.exists()) {
+                        const event = eventDoc.data();
+                        
+                        eventsList.innerHTML += `
+                            <div class="event-card p-3">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <img src="${event.imageUrl || 'default-event.jpg'}" 
+                                            class="img-fluid rounded" alt="${event.title}">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5>${event.title}</h5>
+                                        <p class="text-muted mb-2">
+                                            <i class="fas fa-calendar"></i> ${formatDate(event.date)}
+                                        </p>
+                                        <p class="text-muted mb-2">
+                                            <i class="fas fa-map-marker-alt"></i> ${event.location}
+                                        </p>
+                                        <a href="event-details.html?id=${doc.id}" 
+                                            class="btn btn-sm btn-outline-primary">
+                                            View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (error) {
+                console.error("Error loading upcoming events:", error);
+                document.getElementById('upcomingEventsList').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i> Error loading events
+                    </div>
+                `;
+            }
+        }
+
+        // Load skills progress
+        async function loadSkillsProgress() {
+            try {
+                const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    const skills = userData.skills || {};
+                    const skillsList = document.getElementById('skillsList');
+                    
+                    if (Object.keys(skills).length === 0) {
+                        skillsList.innerHTML = `
+                            <div class="text-center py-4">
+                                <i class="fas fa-tools fa-3x text-muted mb-3"></i>
+                                <h5>No skills recorded yet</h5>
+                                <p class="text-muted">Complete volunteer events to develop and track skills</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    skillsList.innerHTML = Object.entries(skills).map(([skill, level]) => `
+                        <div class="skill-progress">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>${skill}</span>
+                                <span>${level}%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar bg-success" role="progressbar" 
+                                    style="width: ${level}%" 
+                                    aria-valuenow="${level}" 
+                                    aria-valuemin="0" 
+                                    aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error("Error loading skills:", error);
+                document.getElementById('skillsList').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i> Error loading skills
+                    </div>
+                `;
+            }
+        }
+
+        // Load recent badges
+        async function loadRecentBadges() {
+    try {
+        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+        if (userDoc.exists()) {
+            const userData = userDoc.data();
+            const points = userData.points || 0;
+            const badgesList = document.getElementById('badgesList');
+
+            // Calculate badges based on points
+            const badges = {
+                bronze: points >= 50,
+                silver: points >= 100,
+                gold: points >= 500
+            };
+
+            if (points < 50) {
+                badgesList.innerHTML = `
+                    <div class="col-12 text-center py-4">
+                        <i class="fas fa-award fa-3x text-muted mb-3"></i>
+                        <h5>No badges earned yet</h5>
+                        <p class="text-muted">Earn 50 points for your first badge!</p>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" 
+                                style="width: ${(points/50)*100}%" 
+                                aria-valuenow="${points}" 
+                                aria-valuemin="0" 
+                                aria-valuemax="50">
+                                ${points}/50 points
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const badgeHTML = [];
+            
+            if (badges.gold) {
+                badgeHTML.push(`
+                    <div class="col-4">
+                        <div class="badge-card">
+                            <i class="fas fa-medal badge-icon badge-gold"></i>
+                            <div>Gold</div>
+                            <small>500+ points</small>
+                        </div>
+                    </div>
+                `);
+            }
+            
+            if (badges.silver) {
+                badgeHTML.push(`
+                    <div class="col-4">
+                        <div class="badge-card">
+                            <i class="fas fa-medal badge-icon badge-silver"></i>
+                            <div>Silver</div>
+                            <small>100+ points</small>
+                        </div>
+                    </div>
+                `);
+            }
+            
+            if (badges.bronze) {
+                badgeHTML.push(`
+                    <div class="col-4">
+                        <div class="badge-card">
+                            <i class="fas fa-medal badge-icon badge-bronze"></i>
+                            <div>Bronze</div>
+                            <small>50+ points</small>
+                        </div>
+                    </div>
+                `);
+            }
+
+            badgesList.innerHTML = badgeHTML.join('');
+            
+            // Update badge count in statistics
+            document.getElementById('badgesEarned').textContent = 
+                Object.values(badges).filter(Boolean).length;
+        }
+    } catch (error) {
+        console.error("Error loading badges:", error);
+        document.getElementById('badgesList').innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> Error loading badges
+            </div>
+        `;
+    }
+}
+async function awardPointsForEvent(userId, eventPoints) {
+    try {
+        const userRef = doc(db, "users", userId);
+        await runTransaction(db, async (transaction) => {
+            const userDoc = await transaction.get(userRef);
+            if (!userDoc.exists()) {
+                throw "User document does not exist!";
+            }
+
+            const currentPoints = userDoc.data().points || 0;
+            const newPoints = currentPoints + eventPoints;
+
+            transaction.update(userRef, { points: newPoints });
+        });
+    } catch (error) {
+        console.error("Error awarding points:", error);
+        throw error;
+    }
+}
+// Example usage when an event is completed
+async function completeEvent(eventId, userId) {
+    try {
+        const eventRef = doc(db, "events", eventId);
+        const eventDoc = await getDoc(eventRef);
+        
+        if (eventDoc.exists()) {
+            const eventData = eventDoc.data();
+            const pointsToAward = eventData.pointValue || 0; // Default to 0 if not specified
+            
+            await awardPointsForEvent(userId, pointsToAward);
+            
+            // Update event status to completed
+            await updateDoc(eventRef, {
+                status: "completed",
+                completedDate: serverTimestamp()
+            });
+            
+            showAlert("Event completed successfully! You earned " + pointsToAward + " points!", "success");
+        }
+    } catch (error) {
+        console.error("Error completing event:", error);
+        showAlert("Error completing event", "danger");
+    }
+}
+
+    
+        // Helper functions
+        function calculateLevel(points) {
+            return Math.floor(points / 100) + 1;
+        }
+
+        function formatDate(date) {
+            if (!date) return 'Date not available';
+            
+            try {
+                return new Date(date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            } catch (e) {
+                console.error("Date formatting error:", e);
+                return 'Invalid date';
+            }
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorContainer = document.getElementById('errorContainer');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            errorMessage.textContent = message;
+            errorContainer.classList.remove('d-none');
+            
+            setTimeout(() => {
+                errorContainer.classList.add('d-none');
+            }, 5000);
+        }
+
+        // Show alert message
+        function showAlert(message, type = 'info') {
+            const alertHtml = `
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            const alertContainer = document.createElement('div');
+            alertContainer.style.position = 'fixed';
+            alertContainer.style.top = '20px';
+            alertContainer.style.right = '20px';
+            alertContainer.style.zIndex = '1050';
+            alertContainer.innerHTML = alertHtml;
+            
+            document.body.appendChild(alertContainer);
+            
+            setTimeout(() => {
+                alertContainer.remove();
+            }, 5000);
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                window.location.href = '../home/signup.html';
+            } catch (error) {
+                console.error("Error signing out:", error);
+                showAlert("Error signing out", "danger");
+            }
+        });
+    </script>
+</body>
+</html>

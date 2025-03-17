@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Events - V-Connect Organizer</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+     <style>
+        :root {
+            --primary-color: #FFD700;
+            --secondary-color: #FFE55C;
+            --accent-color: #FFD700;
+            --text-dark: #2c3e50;
+            --text-light: #ffffff;
+            --background-light: #f8f9fa;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --success-color: #28a745;
+            --border-radius: 12px;
+            --box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: var(--text-dark);
+           
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--box-shadow);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+           
+            text-decoration: none;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .navbar-nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--primary-color);
+        }
+
+        /* Container Styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header Styles */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Filter Section Styles */
+        .filter-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+        }
+
+        /* Events Grid Styles */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .event-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .event-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .event-content {
+            padding: 1.5rem;
+        }
+
+        .event-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: white;
+        }
+
+        .status-upcoming { background-color: var(--warning-color); }
+        .status-active { background-color: var(--success-color); }
+        .status-completed { background-color: var(--secondary-color); }
+        .status-cancelled { background-color: var(--danger-color); }
+
+        .event-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .event-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--text-dark);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-outline-primary {
+            background-color: transparent;
+            color: var (--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+
+           
+            .navbar-nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="home.html">
+                <img src="../assets/v1.png" alt="V-Connect Logo" height="40">
+                V-Connect
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="organizerDashboard.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="volunteers.html">Volunteers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html">Reports</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" id="logoutBtn">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Manage Events</h2>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="filter-section">
+            <div class="row">
+                <div class="col-md-3">
+                    <select class="form-select" id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="upcoming">Upcoming</option>
+                        <option value="active">Active</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <option value="environmental">Environmental</option>
+                        <option value="education">Education</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="community">Community</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search events...">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-outline-primary w-100" onclick="applyFilters()">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Events Grid -->
+        <div class="row events-grid" id="eventsGrid">
+            <!-- Events will be loaded here dynamically -->
+        </div>
+    </div>
+
+    <!-- Event Details Modal -->
+    <div class="modal fade" id="eventDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Event Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="eventDetailsContent">
+                    <!-- Event details will be loaded dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="deleteEventBtn">Delete Event</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBAZ3Zap2Q_KBCtb6OZzdmLfARO6T0lMLg",
+            authDomain: "v-connect-7d896.firebaseapp.com",
+            projectId: "v-connect-7d896",
+            storageBucket: "v-connect-7d896.appspot.com",
+            messagingSenderId: "489654796371",
+            appId: "1:489654796371:web:d0bf7b41970aec11d546a6",
+            measurementId: "G-CBRKEL7DXS"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);      
+
+        let currentUser = null;
+        let events = [];
+
+        // Check if the organizer is authenticated
+        async function checkOrganizerAuth() {
+            return new Promise((resolve, reject) => {
+                auth.onAuthStateChanged(user => {
+                    if (user) {
+                        resolve(user);
+                    } else {
+                        reject(new Error('User not authenticated'));
+                    }
+                });
+            });
+        }
+
+        // Load events
+        async function loadEvents() {
+            try {
+                const user = await checkOrganizerAuth();
+                currentUser = user;
+
+                const eventsQuery = query(
+                    collection(db, "events"),
+                    where("organizerId", "==", user.uid)
+                );
+
+                const snapshot = await getDocs(eventsQuery);
+                events = [];
+                snapshot.forEach(doc => {
+                    events.push({ id: doc.id, ...doc.data() });
+                });
+
+                if (events.length === 0) {
+                    document.getElementById('eventsGrid').innerHTML = '<p>No events found.</p>';
+                } else {
+                    displayEvents(events);
+                }
+            } catch (error) {
+                console.error("Error loading events:", error);
+                alert('Error loading events');
+            }
+        }
+
+        function displayEvents(eventsToShow) {
+            const grid = document.getElementById('eventsGrid');
+            grid.innerHTML = '';
+
+            eventsToShow.forEach(event => {
+                const card = `
+                    <div class="col-md-4">
+                        <div class="card event-card">
+                            <img src="${event.imageUrl || 'default-event.jpg'}" class="event-image" alt="${event.title}">
+                            <span class="event-status status-${event.status}">${event.status}</span>
+                            <div class="event-content">
+                                <h5 class="event-title">${event.title}</h5>
+                                <div class="event-meta">
+                                    <div class="meta-item">
+                                        <i class="fas fa-calendar"></i> ${formatDate(event.date)}
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-map-marker-alt"></i> ${event.location}
+                                    </div>
+                                    <div class="meta-item volunteer-count">
+                                        <i class="fas fa-users"></i> ${event.registeredVolunteers?.length || 0}/${event.requiredVolunteers}
+                                    </div>
+                                </div>
+                                <p class="event-description">${truncateText(event.description, 100)}</p>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="viewEvent('${event.id}')">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+        }
+
+        // View event details
+        window.viewEvent = async function(eventId) {
+            const event = events.find(e => e.id === eventId);
+            const content = `
+                <h5>${event.title}</h5>
+                <p><strong>Description:</strong> ${event.description}</p>
+                <p><strong>Date:</strong> ${formatDate(event.date)}</p>
+                <p><strong>Time:</strong> ${event.time}</p>
+                <p><strong>Location:</strong> ${event.location}</p>
+                <p><strong>Category:</strong> ${event.category}</p>
+                <p><strong>Required Volunteers:</strong> ${event.requiredVolunteers}</p>
+                <p><strong>Registered Volunteers:</strong> ${event.registeredVolunteers?.length || 0}</p>
+            `;
+            document.getElementById('eventDetailsContent').innerHTML = content;
+            document.getElementById('deleteEventBtn').onclick = () => deleteEvent(eventId);
+            const modal = new bootstrap.Modal(document.getElementById('eventDetailsModal'));
+            modal.show();
+        };
+
+        // Delete event
+        window.deleteEvent = async function(eventId) {
+            if (confirm('Are you sure you want to delete this event?')) {
+                try {
+                    await deleteDoc(doc(db, "events", eventId));
+                    alert('Event deleted successfully');
+                    loadEvents();
+                } catch (error) {
+                    console.error("Error deleting event:", error);
+                    alert('Error deleting event');
+                }
+            }
+        };
+
+        // Helper functions
+        function getStatusColor(status) {
+            const colors = {
+                'upcoming': 'warning',
+                'active': 'success',
+                'completed': 'secondary',
+                'cancelled': 'danger'
+            };
+            return colors[status] || 'primary';
+        }
+
+        function formatDate(date) {
+            return new Date(date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function truncateText(text, maxLength) {
+            return text.length > maxLength ? 
+                text.substring(0, maxLength) + '...' : text;
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', loadEvents);
+    </script>
+</body>
+</html>

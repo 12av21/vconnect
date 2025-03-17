@@ -1,0 +1,503 @@
+<!-- notifications.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - V-Connect Organizer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .notification-card {
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .notification-card:hover {
+            transform: translateX(5px);
+        }
+
+        .notification-card.unread {
+            background-color: #f8f9fa;
+            border-left-color: #007bff;
+        }
+
+        .notification-time {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .notification-type {
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+
+        .type-event { background-color: #e3f2fd; color: #1976d2; }
+        .type-volunteer { background-color: #e8f5e9; color: #2e7d32; }
+        .type-system { background-color: #fff3e0; color: #f57c00; }
+        .type-alert { background-color: #ffebee; color: #c62828; }
+
+        .filter-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <!-- Same navigation as before -->
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Notifications</h2>
+            <div>
+                <button class="btn btn-outline-primary me-2" onclick="markAllRead()">
+                    <i class="fas fa-check-double"></i> Mark All Read
+                </button>
+                <button class="btn btn-primary" onclick="showSendNotification()">
+                    <i class="fas fa-paper-plane"></i> Send Notification
+                </button>
+            </div>
+        </div>
+
+        <!-- Statistics Row -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number" id="totalNotifications">0</div>
+                    <div>Total Notifications</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number" id="unreadNotifications">0</div>
+                    <div>Unread</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number" id="todayNotifications">0</div>
+                    <div>Today</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number" id="sentNotifications">0</div>
+                    <div>Sent</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="row">
+                <div class="col-md-3">
+                    <select class="form-select" id="typeFilter">
+                        <option value="">All Types</option>
+                        <option value="event">Event</option>
+                        <option value="volunteer">Volunteer</option>
+                        <option value="system">System</option>
+                        <option value="alert">Alert</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="unread">Unread</option>
+                        <option value="read">Read</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="searchInput" 
+                        placeholder="Search notifications...">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary w-100" onclick="applyFilters()">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications List -->
+        <div id="notificationsList">
+            <!-- Notifications will be loaded here -->
+        </div>
+
+        <!-- Load More Button -->
+        <div class="text-center mt-4" id="loadMoreContainer">
+            <button class="btn btn-outline-primary" onclick="loadMore()">
+                Load More
+            </button>
+        </div>
+    </div>
+
+    <!-- Send Notification Modal -->
+    <div class="modal fade" id="sendNotificationModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Send Notification</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="sendNotificationForm">
+                        <div class="mb-3">
+                            <label class="form-label">Recipients</label>
+                            <select class="form-select" id="recipientType" required>
+                                <option value="all">All Volunteers</option>
+                                <option value="event">Event Participants</option>
+                                <option value="specific">Specific Volunteers</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" id="eventSelection" style="display: none;">
+                            <label class="form-label">Select Event</label>
+                            <select class="form-select" id="eventSelect">
+                                <!-- Events will be loaded here -->
+                            </select>
+                        </div>
+                        <div class="mb-3" id="volunteerSelection" style="display: none;">
+                            <label class="form-label">Select Volunteers</label>
+                            <select class="form-select" id="volunteerSelect" multiple>
+                                <!-- Volunteers will be loaded here -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" id="notificationTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-control" id="notificationMessage" rows="4" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Priority</label>
+                            <select class="form-select" id="notificationPriority">
+                                <option value="normal">Normal</option>
+                                <option value="high">High</option>
+                                <option value="urgent">Urgent</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Notification</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth, db } from './firebaseConfig.js';
+        import { collection, query, where, orderBy, limit, getDocs, 
+                updateDoc, doc, addDoc, startAfter } from 'firebase/firestore';
+        import { checkOrganizerAuth } from './organizerAuth.js';
+
+        let currentUser = null;
+        let lastDocument = null;
+        let notifications = [];
+        const PAGE_SIZE = 20;
+
+        // Load notifications
+        async function loadNotifications(isInitial = true) {
+            try {
+                if (isInitial) {
+                    const user = await checkOrganizerAuth();
+                    currentUser = user;
+                }
+
+                let notificationsQuery = query(
+                    collection(db, "notifications"),
+                    where("organizerId", "==", currentUser.uid),
+                    orderBy("createdAt", "desc"),
+                    limit(PAGE_SIZE)
+                );
+
+                if (!isInitial && lastDocument) {
+                    notificationsQuery = query(
+                        collection(db, "notifications"),
+                        where("organizerId", "==", currentUser.uid),
+                        orderBy("createdAt", "desc"),
+                        startAfter(lastDocument),
+                        limit(PAGE_SIZE)
+                    );
+                }
+
+                const snapshot = await getDocs(notificationsQuery);
+                
+                if (snapshot.empty && isInitial) {
+                    document.getElementById('notificationsList').innerHTML = `
+                        <div class="text-center text-muted my-5">
+                            <i class="fas fa-bell fa-3x mb-3"></i>
+                            <p>No notifications found</p>
+                        </div>
+                    `;
+                    document.getElementById('loadMoreContainer').style.display = 'none';
+                    return;
+                }
+
+                lastDocument = snapshot.docs[snapshot.docs.length - 1];
+                
+                if (isInitial) {
+                    notifications = [];
+                    document.getElementById('notificationsList').innerHTML = '';
+                }
+
+                snapshot.forEach(doc => {
+                    const notification = { id: doc.id, ...doc.data() };
+                    notifications.push(notification);
+                    displayNotification(notification);
+                });
+
+                // Update load more button visibility
+                document.getElementById('loadMoreContainer').style.display = 
+                    snapshot.size < PAGE_SIZE ? 'none' : 'block';
+
+                // Update statistics
+                if (isInitial) {
+                    updateStatistics();
+                }
+            } catch (error) {
+                console.error("Error loading notifications:", error);
+                alert('Error loading notifications');
+            }
+        }
+
+        // Display notification
+        function displayNotification(notification) {
+            const notificationsList = document.getElementById('notificationsList');
+            const card = `
+                <div class="notification-card ${notification.read ? '' : 'unread'}" 
+                    id="notification-${notification.id}">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="notification-type type-${notification.type}">
+                                ${notification.type}
+                            </span>
+                            <strong>${notification.title}</strong>
+                        </div>
+                        <div class="notification-time">
+                            ${formatTime(notification.createdAt)}
+                        </div>
+                    </div>
+                    <p class="mb-2">${notification.message}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            ${notification.read ? 
+                                `Read ${formatTime(notification.readAt)}` : 'Unread'}
+                        </small>
+                        <div>
+                            ${!notification.read ? `
+                                <button class="btn btn-sm btn-outline-primary me-2" 
+                                    onclick="markAsRead('${notification.id}')">
+                                    Mark as Read
+                                </button>
+                            ` : ''}
+                            <button class="btn btn-sm btn-outline-danger" 
+                                onclick="deleteNotification('${notification.id}')">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            notificationsList.innerHTML += card;
+        }
+
+        // Update statistics
+        function updateStatistics() {
+            const total = notifications.length;
+            const unread = notifications.filter(n => !n.read).length;
+            const today = notifications.filter(n => 
+                isToday(new Date(n.createdAt))
+            ).length;
+            const sent = notifications.filter(n => n.sent).length;
+
+            document.getElementById('totalNotifications').textContent = total;
+            document.getElementById('unreadNotifications').textContent = unread;
+            document.getElementById('todayNotifications').textContent = today;
+            document.getElementById('sentNotifications').textContent = sent;
+        }
+
+        // Helper functions
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function isToday(date) {
+            const today = new Date();
+            return date.getDate() === today.getDate() &&
+                date.getMonth() === today.getMonth() &&
+                date.getFullYear() === today.getFullYear();
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', loadNotifications);
+
+        // Make functions available globally
+        window.loadMore = function() {
+            loadNotifications(false);
+        };
+
+        window.markAsRead = async function(notificationId) {
+            try {
+                await updateDoc(doc(db, "notifications", notificationId), {
+                    read: true,
+                    readAt: new Date().toISOString()
+                });
+                
+                const element = document.getElementById(`notification-${notificationId}`);
+                element.classList.remove('unread');
+                loadNotifications();
+            } catch (error) {
+                console.error("Error marking notification as read:", error);
+                alert('Error updating notification');
+            }
+        };
+
+        window.markAllRead = async function() {
+            try {
+                const unreadNotifications = notifications.filter(n => !n.read);
+                const batch = writeBatch(db);
+                
+                unreadNotifications.forEach(notification => {
+                    const notificationRef = doc(db, "notifications", notification.id);
+                    batch.update(notificationRef, {
+                        read: true,
+                        readAt: new Date().toISOString()
+                    });
+                });
+
+                await batch.commit();
+                loadNotifications();
+            } catch (error) {
+                console.error("Error marking all notifications as read:", error);
+                alert('Error updating notifications');
+            }
+        };
+
+        window.deleteNotification = async function(notificationId) {
+            if (confirm('Are you sure you want to delete this notification?')) {
+                try {
+                    await deleteDoc(doc(db, "notifications", notificationId));
+                    document.getElementById(`notification-${notificationId}`).remove();
+                    notifications = notifications.filter(n => n.id !== notificationId);
+                    updateStatistics();
+                } catch (error) {
+                    console.error("Error deleting notification:", error);
+                    alert('Error deleting notification');
+                }
+            }
+        };
+
+        window.showSendNotification = function() {
+            const modal = new bootstrap.Modal(document.getElementById('sendNotificationModal'));
+            modal.show();
+        };
+
+        // Handle recipient type change
+        document.getElementById('recipientType').addEventListener('change', function(e) {
+            const eventSelection = document.getElementById('eventSelection');
+            const volunteerSelection = document.getElementById('volunteerSelection');
+            
+            eventSelection.style.display = 'none';
+            volunteerSelection.style.display = 'none';
+
+            if (e.target.value === 'event') {
+                eventSelection.style.display = 'block';
+                loadEvents();
+            } else if (e.target.value === 'specific') {
+                volunteerSelection.style.display = 'block';
+                loadVolunteers();
+            }
+        });
+
+        // Handle notification form submission
+        document.getElementById('sendNotificationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+
+            try {
+                const recipientType = document.getElementById('recipientType').value;
+                const title = document.getElementById('notificationTitle').value;
+                const message = document.getElementById('notificationMessage').value;
+                const priority = document.getElementById('notificationPriority').value;
+
+                let recipients = [];
+
+                if (recipientType === 'all') {
+                    // Get all volunteers
+                    const volunteersSnapshot = await getDocs(collection(db, "volunteers"));
+                    recipients = volunteersSnapshot.docs.map(doc => doc.id);
+                } else if (recipientType === 'event') {
+                    const eventId = document.getElementById('eventSelect').value;
+                    const eventDoc = await getDoc(doc(db, "events", eventId));
+                    recipients = eventDoc.data().registeredVolunteers || [];
+                } else {
+                    recipients = Array.from(document.getElementById('volunteerSelect').selectedOptions)
+                        .map(option => option.value);
+                }
+
+                // Create notifications for each recipient
+                const batch = writeBatch(db);
+                recipients.forEach(recipientId => {
+                    const notificationRef = doc(collection(db, "notifications"));
+                    batch.set(notificationRef, {
+                        recipientId,
+                        organizerId: currentUser.uid,
+                        title,
+                        message,
+                        type: 'organizer',
+                        priority,
+                        read: false,
+                        createdAt: new Date().toISOString()
+                    });
+                });
+
+                await batch.commit();
+                alert('Notifications sent successfully!');
+                bootstrap.Modal.getInstance(document.getElementById('sendNotificationModal')).hide();
+                loadNotifications();
+            } catch (error) {
+                console.error("Error sending notifications:", error);
+                alert('Error sending notifications');
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

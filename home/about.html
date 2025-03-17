@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - V-Connect</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #FFD700;
+            --secondary-color: #FFE55C;
+            --text-dark: #2c3e50;
+            --text-light: #ffffff;
+            --dark: #333333;
+            --light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light);
+        }
+
+        .navbar {
+            background: var(--text-dark);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            color: var(--text-light) !important;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                        url('../assets/hero-bg.jpg') center/cover;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            color: var(--text-light);
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Mission Section */
+        .mission-section {
+            padding: 5rem 0;
+            background-color: var(--background-light);
+        }
+
+        .mission-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .mission-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .mission-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Impact Section */
+        .impact-section {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .impact-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .impact-text {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+        }
+
+        /* Team Section */
+        .team-section {
+            padding: 5rem 0;
+            background-color: var(--background-light);
+        }
+
+        .team-member {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .team-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            object-fit: cover;
+            border: 5px solid var(--primary-color);
+        }
+
+        .social-links a {
+            color: var(--text-dark);
+            margin: 0 10px;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Join Section */
+        .join-section {
+            padding: 5rem 0;
+            background: linear-gradient(rgba(34, 43, 46, 0.8), rgba(0, 0, 0, 0.8)),
+                        url('../assets/join-bg.jpg') center/cover;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .impact-number {
+                font-size: 2.5rem;
+            }
+        }
+        .footer {
+        background: var(--text-dark);
+        color: var(--text-light);
+        padding: 3rem 0;
+    }
+    
+    .social-links a {
+        color: var(--text-light);
+        text-decoration: none;
+        margin: 0 1rem;
+        transition: color 0.3s ease;
+    }
+    
+    .social-links a:hover {
+        color: var(--primary-color);
+    }
+    
+    .footer a {
+        color: var(--text-light);
+        text-decoration: none;
+    }
+    
+    .footer a:hover {
+        color: var(--primary-color);
+    }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+      
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="home.html">
+                <img src="../assets/v1.png" alt="V-Connect Logo" height="40">
+                V-Connect
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="opportunity.html">
+                            <i class="fas fa-search"></i> Opportunities
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="blog.html">
+                            <i class="fas fa-blog"></i> Blog
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary ms-2" href="signup.html">
+                            <i class="fas fa-user"></i> Login
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Making a Difference Together</h1>
+            <p class="hero-subtitle">Connecting passionate volunteers with meaningful opportunities</p>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="mission-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2>Our Mission</h2>
+                <p class="lead">We strive to create positive change through volunteering</p>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="mission-card">
+                        <i class="fas fa-hands-helping mission-icon"></i>
+                        <h3>Connect</h3>
+                        <p>Bringing together volunteers and organizations to create meaningful impact in communities.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="mission-card">
+                        <i class="fas fa-heart mission-icon"></i>
+                        <h3>Empower</h3>
+                        <p>Empowering individuals to make a difference through volunteering opportunities.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="mission-card">
+                        <i class="fas fa-globe mission-icon"></i>
+                        <h3>Impact</h3>
+                        <p>Creating lasting positive change in communities through collective action.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section class="impact-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2>Our Impact</h2>
+                <p class="lead">Making a difference in numbers</p>
+            </div>
+            <div class="row text-center">
+                <div class="col-md-3 mb-4">
+                    <div class="impact-number" data-count="1000">1000+</div>
+                    <div class="impact-text">Volunteers</div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="impact-number" data-count="500">500+</div>
+                    <div class="impact-text">Events Completed</div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="impact-number" data-count="100">100+</div>
+                    <div class="impact-text">Organizations</div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="impact-number" data-count="50">50+</div>
+                    <div class="impact-text">Cities</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2>Our Team</h2>
+                <p class="lead">Meet the people behind V-Connect</p>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="team-member">
+                        <img src="../assets/av.jpg" alt="Adarsh Verma" class="team-image">
+                        <h3>Adarsh Verma</h3>
+                        <p>Founder & CEO</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="team-member">
+                        <img src="../assets/prakku.jpg" alt="Pratiksha Tripathi" class="team-image">
+                        <h3>Pratiksha Tripathi</h3>
+                        <p>Co-Founder & CTO</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Join Section -->
+    <section class="join-section">
+        <div class="container">
+            <h2>Ready to Make a Difference?</h2>
+            <p class="lead mb-4">Join our community of volunteers and start making an impact today</p>
+            <a href="signup.html" class="btn btn-primary btn-lg">Join V-Connect</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>About V-Connect</h5>
+                    <p>Connecting volunteers with meaningful opportunities to create positive change in communities.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="opportunity.html">Opportunities</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Connect With Us</h5>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-4">
+            <div class="text-center">
+                <p>&copy; 2024 V-Connect. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Animate impact numbers
+        function animateNumbers() {
+            document.querySelectorAll('.impact-number').forEach(number => {
+                const target = parseInt(number.getAttribute('data-count'));
+                let count = 0;
+                const duration = 2000; // 2 seconds
+                const increment = target / (duration / 16); // 60fps
+
+                const timer = setInterval(() => {
+                    count += increment;
+                    if (count >= target) {
+                        number.textContent = target + '+';
+                        clearInterval(timer);
+                    } else {
+                        number.textContent = Math.floor(count) + '+';
+                    }
+                }, 16);
+            });
+        }
+
+        // Run animation when section is in view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateNumbers();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+
+        observer.observe(document.querySelector('.impact-section'));
+    </script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+// Firebase setup
+import { db, auth } from "../config/firebaseConfig"; // Make sure to import Firebase
+import { doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+// Initialize Dashboard
+document.addEventListener("DOMContentLoaded", async function () {
+    await initializeDashboard();
+    createCharts();
+    await loadUpcomingEvents();
+});
+
+// Function to load volunteer data
+async function initializeDashboard() {
+    const user = auth.currentUser; // Get the logged-in user
+
+    if (!user) {
+        alert("User not logged in");
+        return;
+    }
+
+    try {
+        const userDocRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+            const volunteerData = userDoc.data(); // Fetch user data
+
+            // Update UI with user info
+            document.getElementById("welcomeMessage").textContent =
+                `Welcome back, ${volunteerData.name}!`;
+
+            document.getElementById("lastLoginTime").textContent =
+                `Last login: ${new Date(volunteerData.lastLogin).toLocaleString()}`;
+
+            // Update statistics
+            document.getElementById("totalHours").textContent = volunteerData.stats.totalHours || 0;
+            document.getElementById("eventsAttended").textContent = volunteerData.stats.eventsAttended || 0;
+            document.getElementById("peopleHelped").textContent = volunteerData.stats.peopleHelped || 0;
+            document.getElementById("achievements").textContent = volunteerData.stats.achievements || 0;
+        } else {
+            console.log("No such user data found!");
+        }
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+    }
+}
+
+// Function to create charts
+function createCharts() {
+    const hoursCtx = document.getElementById("hoursChart").getContext("2d");
+    new Chart(hoursCtx, {
+        type: "line",
+        data: {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+            datasets: [
+                {
+                    label: "Volunteer Hours",
+                    data: [10, 15, 20, 25, 30, 20],
+                    borderColor: "#4CAF50",
+                    tension: 0.1,
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+        },
+    });
+
+    const impactCtx = document.getElementById("impactChart").getContext("2d");
+    new Chart(impactCtx, {
+        type: "doughnut",
+        data: {
+            labels: ["Environment", "Education", "Healthcare", "Community"],
+            datasets: [
+                {
+                    data: [30, 25, 20, 25],
+                    backgroundColor: ["#4CAF50", "#2196F3", "#FFC107", "#9C27B0"],
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+        },
+    });
+}
+
+// Function to load upcoming events for the logged-in volunteer
+async function loadUpcomingEvents() {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    try {
+        const eventsContainer = document.getElementById("upcomingEvents");
+        eventsContainer.innerHTML = "";
+
+        // Query registrations where the volunteer has registered
+        const registrationsQuery = query(
+            collection(db, "registrations"),
+            where("volunteerId", "==", user.uid)
+        );
+
+        const registrationsSnapshot = await getDocs(registrationsQuery);
+
+        if (registrationsSnapshot.empty) {
+            eventsContainer.innerHTML = `<div class="alert alert-info">No upcoming events.</div>`;
+            return;
+        }
+
+        for (const regDoc of registrationsSnapshot.docs) {
+            const regData = regDoc.data();
+            const eventDoc = await getDoc(doc(db, "events", regData.eventId));
+
+            if (eventDoc.exists()) {
+                const event = eventDoc.data();
+                const eventDate = new Date(event.date);
+                const eventElement = document.createElement("div");
+                eventElement.className = "list-group-item list-group-item-action";
+                eventElement.innerHTML = `
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">${event.title}</h5>
+                        <small>${eventDate.toLocaleDateString()}</small>
+                    </div>
+                    <p class="mb-1">${event.location}</p>
+                `;
+                eventsContainer.appendChild(eventElement);
+            }
+        }
+    } catch (error) {
+        console.error("Error loading upcoming events:", error);
+    }
+}
+
+// Logout functionality
+document.getElementById("logoutBtn").addEventListener("click", function () {
+    auth.signOut().then(() => {
+        window.location.href = "login.html";
+    }).catch((error) => {
+        console.error("Logout failed:", error);
+    });
+});
